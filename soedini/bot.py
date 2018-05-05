@@ -40,7 +40,7 @@ def send_start(message):
 def send_start(message):
     session = database.get_session()
     chat = Chat.get_by_telegram_id(message.chat.id)
-    bot.send_message(chat.telegram_id, BOT_HELP)
+    bot.send_message(chat.telegram_id, BOT_HELP, disable_web_page_preview=True)
     session.commit()
     session.close()
 
