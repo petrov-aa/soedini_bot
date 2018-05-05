@@ -35,6 +35,15 @@ def send_start(message):
     session.close()
 
 
+@bot.message_handler(commands=['help'])
+def send_start(message):
+    session = database.get_session()
+    chat = Chat.get_by_telegram_id(message.chat.id)
+    bot.send_message(chat.telegram_id, BOT_HELP)
+    session.commit()
+    session.close()
+
+
 @bot.message_handler(content_types=['photo'])
 def process_photo(message):
     session = database.get_session()
