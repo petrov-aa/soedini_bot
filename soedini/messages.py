@@ -32,6 +32,8 @@ BOT_HELP = """
 /start - Начать новую
 /cancel - Отмена/Начать новую
 /soedini - Склеить отправленные
+
+Github - https://git.io/vpw6r
 """
 
 BOT_CONTINUE = """
