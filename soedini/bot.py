@@ -96,6 +96,9 @@ def send_combined_message(message):
     combined_image.save(combined_image_path)
     bot.send_photo(chat.telegram_id, open(combined_image_path, 'rb'), reply_to_message_id=message.message_id)
     bot.delete_message(chat.telegram_id, busy_message.telegram_id)
+    if os.path.exists(combined_image_path):
+        os.remove(combined_image_path)
+    restart(chat)
     session.commit()
     session.close()
 
