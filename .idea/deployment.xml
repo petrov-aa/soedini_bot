@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" serverName="ssh://vagrant@vagrant_hata_vladona:2222/usr/bin/python3" autoUploadExternalChanges="true">
+    <serverData>
+      <paths name="ssh://vagrant@vagrant_hata_vladona:2222/usr/bin/python3">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/pycharm_project_367" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>
