@@ -1,13 +1,12 @@
-import shutil
-
+import logging
 import os
 import requests
-from telebot import TeleBot, apihelper
+import shutil
+from telebot import TeleBot, apihelper, logger
 
 from soedini import process
 from .database import database
 from .config import bot_config, proxy_config, tmp_dir
-
 from .models import Chat, Message, Image, CHAT_STATE_WAIT_IMAGES
 from .messages import *
 
@@ -20,6 +19,8 @@ proxy_urls = {'https': '%s://%s:%s@%s:%s' % (proxy_config['protocol'],
                                              proxy_config['password'],
                                              proxy_config['host'],
                                              proxy_config['port'])} if bot_config['use_proxy'] else {}
+
+logger.setLevel(logging.DEBUG)
 
 if bot_config['use_proxy']:
     apihelper.proxy = proxy_urls
