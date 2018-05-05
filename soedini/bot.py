@@ -19,7 +19,7 @@ proxy_urls = {'https': '%s://%s:%s@%s:%s' % (proxy_config['protocol'],
                                              proxy_config['user'],
                                              proxy_config['password'],
                                              proxy_config['host'],
-                                             proxy_config['port'])}
+                                             proxy_config['port'])} if bot_config['use_proxy'] else {}
 
 if bot_config['use_proxy']:
     apihelper.proxy = proxy_urls

@@ -7,6 +7,14 @@
           <option name="port" value="2222" />
         </fileTransfer>
       </webServer>
+      <webServer id="c460e41e-04e2-4d8e-929a-972394136423" name="vds.sh sodini" url="http://91.235.137.225">
+        <fileTransfer host="91.235.137.225" port="22" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
     </option>
   </component>
 </project>
