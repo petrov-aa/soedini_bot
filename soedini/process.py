@@ -20,8 +20,16 @@ def get_combined_image(image_list):
 
     x_offset = 0
     for image in images:
+        ratio = min_height / image.size[1]
+        new_width = int(float(image.size[0])*ratio)
+        new_height = int(float(image.size[1])*ratio)
+        if new_width < min_width:
+            ratio1 = min_width / new_width
+            new_height = int(float(new_height) * ratio1)
+            new_width = min_width
+        image = image.resize((new_width, new_height), Image.ANTIALIAS)
         combined.paste(image, (x_offset, 0))
-        x_offset += image.size[0]
+        x_offset += min_width
 
     return combined
 

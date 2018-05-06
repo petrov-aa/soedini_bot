@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="ssh://vagrant@vagrant_hata_vladona:2222/usr/bin/python3" autoUploadExternalChanges="true">
+  <component name="PublishConfigData" autoUpload="Always" serverName="vds.sh sodini" autoUploadExternalChanges="true">
     <serverData>
       <paths name="ssh://vagrant@vagrant_hata_vladona:2222/usr/bin/python3">
         <serverdata>
