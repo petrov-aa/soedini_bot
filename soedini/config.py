@@ -1,7 +1,9 @@
 from configparser import ConfigParser
 
+
 class ConfigError(Exception):
     pass
+
 
 config_file = './config.ini'
 
@@ -45,6 +47,10 @@ bot_config = {
     'token': config['Bot']['token'],
     'use_proxy': config['Bot']['use_proxy'] != 'no',
     'update_method': config['Bot']['update_method'],
+    'webhook_host': '',
+    'webhook_port': '',
+    'local_port': '',
+    'public_cert_path': '',
 }
 
 if bot_config['update_method'] == 'webhook':
@@ -52,8 +58,14 @@ if bot_config['update_method'] == 'webhook':
         raise ConfigError('Не задан webhook-хост')
     if 'webhook_port' not in config['Bot']:
         raise ConfigError('Не задан webhook-порт')
+    if 'local_port' not in config['Bot']:
+        raise ConfigError('Не задан порт локального хоста')
+    if 'public_cert_path' not in config['Bot']:
+        raise ConfigError('Не задан путь к публичкому SSL-сертификату')
     bot_config['webhook_host'] = config['Bot']['webhook_host']
     bot_config['webhook_port'] = config['Bot']['webhook_port']
+    bot_config['local_port'] = config['Bot']['local_port']
+    bot_config['public_cert_path'] = config['Bot']['public_cert_path']
 
 proxy_config = {}
 

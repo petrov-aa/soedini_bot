@@ -20,7 +20,7 @@ proxy_urls = {'https': '%s://%s:%s@%s:%s' % (proxy_config['protocol'],
                                              proxy_config['host'],
                                              proxy_config['port'])} if bot_config['use_proxy'] else {}
 
-# logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.DEBUG)
 
 if bot_config['use_proxy']:
     apihelper.proxy = proxy_urls
