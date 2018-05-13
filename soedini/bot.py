@@ -4,8 +4,8 @@ import requests
 import shutil
 from telebot import TeleBot, apihelper, logger
 
-from soedini import process
-from .database import database
+from . import process
+from .database import commit_session, flush_session
 from .config import bot_config, proxy_config, tmp_dir
 from .models import Chat, Message, Image, CHAT_STATE_WAIT_IMAGES
 from .messages import *
@@ -28,79 +28,71 @@ if bot_config['use_proxy']:
 
 @bot.message_handler(commands=['start', 'cancel'])
 def send_start(message):
-    session = database.get_session()
-    chat = Chat.get_by_telegram_id(message.chat.id)
-    restart(chat)
-    bot.send_message(chat.telegram_id, BOT_START)
-    session.commit()
-    session.close()
+    with commit_session() as session:
+        chat = Chat.get_by_telegram_id(message.chat.id)
+        restart(chat)
+        bot.send_message(chat.telegram_id, BOT_START)
 
 
 @bot.message_handler(commands=['help'])
 def send_start(message):
-    session = database.get_session()
-    chat = Chat.get_by_telegram_id(message.chat.id)
-    bot.send_message(chat.telegram_id, BOT_HELP, disable_web_page_preview=True)
-    session.commit()
-    session.close()
+    with commit_session() as session:
+        chat = Chat.get_by_telegram_id(message.chat.id)
+        bot.send_message(chat.telegram_id, BOT_HELP, disable_web_page_preview=True)
 
 
 @bot.message_handler(content_types=['photo'])
 def process_photo(message):
-    session = database.get_session()
-    chat = Chat.get_by_telegram_id(message.chat.id)
-    state_changed = False
-    if chat.state != CHAT_STATE_WAIT_IMAGES:
-        restart(chat)
-        chat.state = CHAT_STATE_WAIT_IMAGES
-        state_changed = True
-        session.flush()
-    if len(message.photo) == 0:
-        bot.send_message(chat.telegram_id,
-                         BOT_PHOTO_FAILURE,
-                         reply_to_message_id=message.message_id)
-    photo = message.photo[len(message.photo) - 1]
-    photo_info = bot.get_file(photo.file_id)
-    image = Image(chat, message)
-    try:
-        fetch_telegram_file(photo_info, image.path)
-        session.add(image)
-        session.flush()
-        if state_changed:
-            bot.send_message(chat.telegram_id, BOT_CONTINUE)
-    except FileNotFoundError:
-        bot.send_message(chat.telegram_id,
-                         BOT_PHOTO_FAILURE,
-                         reply_to_message_id=message.message_id)
-        session.delete(image)
-        session.flush()
-    session.commit()
-    session.close()
+    with commit_session() as session:
+        chat = Chat.get_by_telegram_id(message.chat.id)
+        state_changed = False
+        if chat.state != CHAT_STATE_WAIT_IMAGES:
+            restart(chat)
+            chat.state = CHAT_STATE_WAIT_IMAGES
+            state_changed = True
+            session.flush()
+        if len(message.photo) == 0:
+            bot.send_message(chat.telegram_id,
+                             BOT_PHOTO_FAILURE,
+                             reply_to_message_id=message.message_id)
+        photo = message.photo[len(message.photo) - 1]
+        photo_info = bot.get_file(photo.file_id)
+        image = Image(chat, message)
+        try:
+            fetch_telegram_file(photo_info, image.path)
+            session.add(image)
+            session.flush()
+            if state_changed:
+                bot.send_message(chat.telegram_id, BOT_CONTINUE)
+        except FileNotFoundError:
+            bot.send_message(chat.telegram_id,
+                             BOT_PHOTO_FAILURE,
+                             reply_to_message_id=message.message_id)
+            session.delete(image)
+            session.flush()
 
 
 @bot.message_handler(commands=['soedini'])
 def send_combined_message(message):
-    session = database.get_session()
-    chat = Chat.get_by_telegram_id(message.chat.id)
-    if chat.state != CHAT_STATE_WAIT_IMAGES:
-        bot.send_message(chat.telegram_id, BOT_STATE_FAILURE)
-        return
-    chat.state = None
-    session.flush()
-    busy_msg_result = bot.send_message(chat.telegram_id, BOT_BUSY)
-    busy_message = Message()
-    busy_message.telegram_id = busy_msg_result.message_id
-    image_list = session.query(Image).filter(Image.chat_id == chat.id).all()
-    combined_image = process.get_combined_image(image_list)
-    combined_image_path = combined_image_path_template % chat.id
-    combined_image.save(combined_image_path)
-    bot.send_photo(chat.telegram_id, open(combined_image_path, 'rb'))
-    bot.delete_message(chat.telegram_id, busy_message.telegram_id)
-    if os.path.exists(combined_image_path):
-        os.remove(combined_image_path)
-    restart(chat)
-    session.commit()
-    session.close()
+    with commit_session() as session:
+        chat = Chat.get_by_telegram_id(message.chat.id)
+        if chat.state != CHAT_STATE_WAIT_IMAGES:
+            bot.send_message(chat.telegram_id, BOT_STATE_FAILURE)
+            return
+        chat.state = None
+        session.flush()
+        busy_msg_result = bot.send_message(chat.telegram_id, BOT_BUSY)
+        busy_message = Message()
+        busy_message.telegram_id = busy_msg_result.message_id
+        image_list = session.query(Image).filter(Image.chat_id == chat.id).all()
+        combined_image = process.get_combined_image(image_list)
+        combined_image_path = combined_image_path_template % chat.id
+        combined_image.save(combined_image_path)
+        bot.send_photo(chat.telegram_id, open(combined_image_path, 'rb'))
+        bot.delete_message(chat.telegram_id, busy_message.telegram_id)
+        if os.path.exists(combined_image_path):
+            os.remove(combined_image_path)
+        restart(chat)
 
 
 def fetch_telegram_file(file_info, target_path):
@@ -117,13 +109,12 @@ def fetch_telegram_file(file_info, target_path):
 
 
 def restart(chat):
-    session = database.get_session()
-    if not os.path.isdir(tmp_dir):
-        os.makedirs(tmp_dir)
-    image_list = session.query(Image).filter(Image.chat_id == chat.id).all()
-    for image in image_list:
-        if os.path.exists(image.path):
-            os.remove(image.path)
-        session.delete(image)
-    chat.state = None
-    session.flush()
+    with flush_session() as session:
+        if not os.path.isdir(tmp_dir):
+            os.makedirs(tmp_dir)
+        image_list = session.query(Image).filter(Image.chat_id == chat.id).all()
+        for image in image_list:
+            if os.path.exists(image.path):
+                os.remove(image.path)
+            session.delete(image)
+        chat.state = None
