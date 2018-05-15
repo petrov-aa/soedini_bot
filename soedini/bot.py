@@ -3,6 +3,7 @@ import os
 import requests
 import shutil
 from telebot import TeleBot, apihelper, logger
+from telebot.apihelper import ApiException
 
 from . import process
 from .database import commit_session, flush_session
@@ -59,17 +60,18 @@ def process_photo(message):
         photo_info = bot.get_file(photo.file_id)
         image = Image(chat, message)
         try:
-            fetch_telegram_file(photo_info, image.path)
+            with open(image.path, 'wb') as file:
+                content = bot.download_file(photo_info.file_path)
+                file.write(content)
             session.add(image)
-            session.flush()
             if state_changed:
                 bot.send_message(chat.telegram_id, BOT_CONTINUE)
-        except FileNotFoundError:
+        except Exception as e:
+            print(str(e))
             bot.send_message(chat.telegram_id,
                              BOT_PHOTO_FAILURE,
                              reply_to_message_id=message.message_id)
             session.delete(image)
-            session.flush()
 
 
 @bot.message_handler(commands=['soedini'])
@@ -93,19 +95,6 @@ def send_combined_message(message):
         if os.path.exists(combined_image_path):
             os.remove(combined_image_path)
         restart(chat)
-
-
-def fetch_telegram_file(file_info, target_path):
-    file = requests.get('https://api.telegram.org/file/bot{0}/{1}'.format(bot_config['token'], file_info.file_path),
-                        proxies=proxy_urls,
-                        stream=True)
-    if file.status_code != 200:
-        raise FileNotFoundError('Ошибка загрузки')
-    target_dir = os.path.dirname(target_path)
-    if not os.path.isdir(target_dir):
-        os.makedirs(target_dir)
-    with open(target_path, 'wb') as f:
-        shutil.copyfileobj(file.raw, f)
 
 
 def restart(chat):
