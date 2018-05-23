@@ -26,6 +26,7 @@ def flush_session():
         session.flush()
     except:
         session.rollback()
+        raise
 
 
 @contextmanager
@@ -38,3 +39,4 @@ def commit_session():
         session.rollback()
     finally:
         session.close()
+        __Session.remove()
