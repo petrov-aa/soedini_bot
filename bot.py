@@ -15,7 +15,6 @@ if __name__ == '__main__':
 
         external_ip = bot_config['webhook_host']
         external_port = int(bot_config['webhook_port'])
-        listen = '127.0.0.1'
 
         ssl_cert = bot_config['public_cert_path']
 
@@ -44,7 +43,6 @@ if __name__ == '__main__':
 
         web.run_app(
             app,
-            host=listen,
-            port=bot_config['local_port'],
+            path=bot_config['socket_path'],
         )
 
