@@ -3,6 +3,7 @@ stages:
 
 build:
   stage: build
+  image: docker:stable
   script:
     - docker build -t soedini:latest
   tags:
