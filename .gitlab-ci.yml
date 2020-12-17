@@ -4,6 +4,8 @@ stages:
 build:
   stage: build
   image: docker:stable
+  services:
+    - docker:dind
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - dockerdocker build -t $CI_REGISTRY/soedini:latest .
