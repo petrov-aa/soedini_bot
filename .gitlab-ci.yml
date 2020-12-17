@@ -5,3 +5,5 @@ build:
   stage: build
   script:
     - docker build -t soedini:latest
+  tags:
+    - docker
