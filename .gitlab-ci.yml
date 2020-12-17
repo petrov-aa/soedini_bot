@@ -8,7 +8,7 @@ build:
     - docker:dind
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - dockerdocker build -t $CI_REGISTRY/soedini:latest .
+    - docker build -t $CI_REGISTRY/soedini:latest .
     - docker push $CI_REGISTRY/soedini:latest
   tags:
     - docker
