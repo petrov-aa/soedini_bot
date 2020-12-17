@@ -1,0 +1,25 @@
+messages:
+  start: |-
+    :smiling_face_with_sunglasses: Пришли картинки, которые необходимо склеить!
+    Склеиваю картинки по горизонтали, по вертикали или в 2 ряда.
+    :backhand_index_pointing_right::backhand_index_pointing_left:
+  continue: |-
+    :smirking_face: Пришли еще картинки или нажми /soedini, чтобы склеить.
+  cancel: |-
+    :pensive_face: Отмена. Чтобы начать сначала, пришли картинки.
+
+buttons:
+  send: Переслать
+  mode:
+    title: |-
+      %{mode} :heavy_check_mark:
+
+callback:
+  error: Ой, что-то пошло не так(((
+
+inline:
+  switch_pm_text: Соединить картинки!
+
+state:
+  error: |-
+    :pouting_face: Пришли картинки. См. /help.

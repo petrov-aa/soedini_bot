@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig host="vagrant_hata_vladona" id="f36f3ffe-5cc1-4146-8a50-19b05426b1ef" keyPath="$PROJECT_DIR$/../hata_vladona/.vagrant/machines/default/virtualbox/private_key" port="2222" customName="ssh://vagrant@vagrant_hata_vladona:2222/usr/bin/python3" nameFormat="CUSTOM" username="vagrant" />
+      <sshConfig authType="PASSWORD" host="91.235.137.225" id="e5053cef-04b8-4c62-aff5-5f7a87ce1221" port="22" customName="vds.sh sodini" nameFormat="CUSTOM" username="soedini" />
+    </configs>
+  </component>
+</project>
