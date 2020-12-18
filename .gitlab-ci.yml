@@ -16,7 +16,8 @@ before_script:
 Build:
   stage: build
   only:
-    - pipeline-tests
+    refs:
+      - pipeline-tests
   script:
     - >
       docker build
@@ -31,7 +32,8 @@ Push latest:
   variables:
     GIT_STRATEGY: none
   only:
-    - pipeline-tests
+    refs:
+      - pipeline-tests
   script:
     - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
     - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:latest
@@ -42,8 +44,9 @@ Push tag:
   variables:
     GIT_STRATEGY: none
   only:
-    - pipeline-tests
-    - tags
+    refs:
+      - master
+      - tags
   script:
     - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
     - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
