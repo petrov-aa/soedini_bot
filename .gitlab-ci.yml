@@ -1,14 +1,50 @@
+# Inspired by
+# https://gist.github.com/florentchauveau/2dc4da0299d42258606fc3b0e148fc07#file-gitlab-ci-yml
+
+image: docker:19
+
+services:
+  - docker:dind
+
 stages:
   - build
+  - push
 
-build:
+before_script:
+  - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+
+Build:
   stage: build
-  image: docker:stable
-  services:
-    - docker:dind
+  only:
+    - pipeline-tests
   script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $CI_REGISTRY/alexanderpetrov/soedini/soedini:latest .
-    - docker push $CI_REGISTRY/alexanderpetrov/soedini/soedini:latest
-  tags:
-    - docker
+    - >
+      docker build
+      --pull
+      --cache-from $CI_REGISTRY_IMAGE:latest
+      --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+      .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+
+Push latest:
+  stage: push
+  variables:
+    GIT_STRATEGY: none
+  only:
+    - pipeline-tests
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:latest
+
+Push tag:
+  stage: push
+  variables:
+    GIT_STRATEGY: none
+  only:
+    - pipeline-tests
+    - tags
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
