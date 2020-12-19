@@ -50,6 +50,7 @@ Push tag:
       - tags
   script:
     # https://gist.github.com/qoomon/22edb16a5e725762f7fdd5083498a64f
+    - IMAGE_TAG=$CI_COMMIT_TAG
     - | # remove leading 'v' for version tags
       if [[ "$CI_COMMIT_TAG" = v[0-9]* ]]; then
         IMAGE_TAG=${IMAGE_TAG#v}
