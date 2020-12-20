@@ -3,13 +3,13 @@
 
 image: docker:19.03.0
 
-services:
-  - docker:19.03.0-dind
-
-# https://about.gitlab.com/releases/2019/07/31/docker-in-docker-with-docker-19-dot-03/
-variables:
-  DOCKER_HOST: tcp://docker:2375
-  DOCKER_TLS_CERTDIR: ""
+#services:
+#  - docker:19.03.0-dind
+#
+## https://about.gitlab.com/releases/2019/07/31/docker-in-docker-with-docker-19-dot-03/
+#variables:
+#  DOCKER_HOST: tcp://docker:2375
+#  DOCKER_TLS_CERTDIR: ""
 
 stages:
   - build
