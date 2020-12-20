@@ -4,7 +4,12 @@
 image: docker:19
 
 services:
-  - docker:dind
+  - docker:19-dind
+
+# https://about.gitlab.com/releases/2019/07/31/docker-in-docker-with-docker-19-dot-03/
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
 
 stages:
   - build
