@@ -1,15 +1,16 @@
 # Inspired by
 # https://gist.github.com/florentchauveau/2dc4da0299d42258606fc3b0e148fc07#file-gitlab-ci-yml
 
-image: docker:19.03.0
+image: docker:19.03.12
 
-#services:
-#  - docker:19.03.0-dind
-#
-## https://about.gitlab.com/releases/2019/07/31/docker-in-docker-with-docker-19-dot-03/
-#variables:
-#  DOCKER_HOST: tcp://docker:2375
-#  DOCKER_TLS_CERTDIR: ""
+services:
+  - docker:19.03.12-dind
+
+# https://about.gitlab.com/releases/2019/07/31/docker-in-docker-with-docker-19-dot-03/
+# https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#tls-disabled
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
 
 stages:
   - build
