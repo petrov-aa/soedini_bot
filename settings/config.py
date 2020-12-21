@@ -67,3 +67,10 @@ secret_config = {
     'django_secret': config['Secret']['django_secret'],
 }
 
+if 'Extra' not in config:
+    raise ConfigError('Не заданы особые параметры')
+if 'allowed_hosts' not in config['Extra']:
+    raise ConfigError('Не заданы доступные хосты')
+extra_config = {
+    'allowed_hosts': config['Extra']['allowed_hosts'].split(" ") if len(config['Extra']['allowed_hosts']) > 0 else [],
+}

@@ -27,7 +27,7 @@ SECRET_KEY = app_settings.secret_config['django_secret']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = app_settings.debug_config['debug']
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = app_settings.extra_config['allowed_hosts']
 
 
 # Application definition
