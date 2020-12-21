@@ -71,6 +71,9 @@ if 'Extra' not in config:
     raise ConfigError('Не заданы особые параметры')
 if 'allowed_hosts' not in config['Extra']:
     raise ConfigError('Не заданы доступные хосты')
+if 'static_root' not in config['Extra']:
+    raise ConfigError('Не заданы корневой каталог статических файлов')
 extra_config = {
     'allowed_hosts': config['Extra']['allowed_hosts'].split(" ") if len(config['Extra']['allowed_hosts']) > 0 else [],
+    'static_root': config['Extra']['static_root']
 }
