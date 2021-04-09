@@ -59,6 +59,14 @@ bot_config = {
     'token': config['Bot']['token'],
 }
 
+if 'Localization' not in config:
+    raise ConfigError('Не заданы параметры локализации')
+if 'lang' not in config['Localization'] or config['Localization']['lang'] not in ['ru', 'en']:
+    raise ConfigError('Не задан язык')
+localization_config = {
+    'lang': config['Localization']['lang'],
+}
+
 if 'Secret' not in config:
     raise ConfigError('Не заданы секретные параметры')
 if 'django_secret' not in config['Secret']:

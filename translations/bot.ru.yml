@@ -23,3 +23,10 @@ inline:
 state:
   error: |-
     :pouting_face: Пришли картинки. См. /help.
+
+session:
+  modes:
+    horizontal: Горизонтально
+    vertical: Вертиально
+    two_rows: 2 ряда
+    square: Квадрат

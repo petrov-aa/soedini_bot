@@ -1,0 +1,31 @@
+messages:
+  start: |-
+    :smiling_face_with_sunglasses: Send me photos you need to join together!
+    I can join two photos together horizontally or vertically.
+  continue: |-
+      :smirking_face: Send me more photos or click /join, to join photos together!
+  cancel: |-
+    :pensive_face: Cancel. To start over, send me photos!
+
+buttons:
+  send: Forward
+  mode:
+    title: |-
+      %{mode} :heavy_check_mark:
+
+callback:
+  error: Something went wrong :(
+
+inline:
+  switch_pm_text: Join photos!
+
+state:
+  error: |-
+    :pouting_face: Send me photos. See /help.
+
+session:
+  modes:
+    horizontal: Horizontally
+    vertical: Vertically
+    two_rows: In two rows
+    square: Square

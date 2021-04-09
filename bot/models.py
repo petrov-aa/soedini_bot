@@ -3,6 +3,8 @@ from typing import Optional
 from django.db import models
 from django.db.models import BigIntegerField, DateTimeField, ForeignKey, CharField, IntegerField
 
+from bot_messages.messages import t
+
 DATE_FORMAT_HUMAN = '%Y-%m-%d %H:%I:%S'
 
 
@@ -27,8 +29,8 @@ class Chat(models.Model):
 
     def __str__(self):
         return 'Chat#%d(TelegramID#%d registered at %s)' % (self.id,
-                                                           self.telegram_id,
-                                                           self.created_at.strftime(DATE_FORMAT_HUMAN))
+                                                            self.telegram_id,
+                                                            self.created_at.strftime(DATE_FORMAT_HUMAN))
 
 
 class Session(models.Model):
@@ -38,10 +40,10 @@ class Session(models.Model):
         CANCELED = 'canceled', 'Canceled'
 
     class Modes(models.TextChoices):
-        HORIZONTAL = 'horizontal', 'Горизонтально'
-        VERTICAL = 'vertical', 'Вертикально'
-        TWO_ROWS = 'two_rows', '2 ряда'
-        SQUARE = 'square', 'Квадрат'
+        HORIZONTAL = 'horizontal', t('bot.session.modes.horizontal')
+        VERTICAL = 'vertical', t('bot.session.modes.vertical')
+        TWO_ROWS = 'two_rows', t('bot.session.modes.two_rows')
+        SQUARE = 'square', t('bot.session.modes.square')
 
     chat = ForeignKey(
         'Chat',

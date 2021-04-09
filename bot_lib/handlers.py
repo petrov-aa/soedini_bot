@@ -10,7 +10,7 @@ from bot.models import Chat, Session
 from bot_lib import bot_backend, process
 import image_cache
 from bot_lib.bot import bot
-from bot_lib.messages import t
+from bot_messages.messages import t
 
 CALLBACK_ACTION_CHANGE_MODE = 'm'
 CALLBACK_BUTTON_DATA_DELIMITER = ':'
@@ -34,7 +34,8 @@ def on_help_command(message: tg.Message):
     bot.send_message(chat.telegram_id, t('bot.messages.start'))
 
 
-@bot.message_handler(commands=['soedini'])
+# todo Разделить эти команды по языку
+@bot.message_handler(commands=['soedini', 'join'])
 def on_soedini_command(message: tg.Message):
     telegram_chat_id = message.chat.id
     chat = bot_backend.get_chat_by_telegram_id(telegram_chat_id, True, Chat.Sources.SOEDINI)
